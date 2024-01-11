@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# sets up web servers for the deployment of web_static
+#Bash script that sets up your web servers for the deployment of web_static
 if ! command -v nginx &> /dev/null; then
     sudo apt-get update
     sudo apt-get -y install nginx
@@ -18,7 +18,7 @@ echo "<html>
   </body>
 </html>" | sudo tee /data/web_static/releases/test/index.html
 
-sudo ln -s -f /data/web_static/releases/test/ /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 sudo chown -R ubuntu:ubuntu /data/
 
