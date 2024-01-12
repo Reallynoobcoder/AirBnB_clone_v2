@@ -13,7 +13,7 @@ def do_pack():
 
     name = local(f"tar -czvf {file_name} {'web_static'}")
 
-    return f"versions/{file_name"
+    return f"versions/{file_name}"
 
 
 env.hosts = ['35.174.207.232', '34.204.81.91']
