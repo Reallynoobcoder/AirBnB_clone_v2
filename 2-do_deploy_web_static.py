@@ -5,7 +5,7 @@ from os.path import exists
 
 
 def do_pack():
-
+    """Create a .tgz archive from the contents of web_static folder."""
     file_name = f"web_static_{datetime.now():%Y%m%d%H%M%S}.tgz"
     print(file_name)
 
