@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from datetime import datetime
-from fabric3.api import local, env, put, run, exists
+from fabric.api import local, put, run, env
 from os.path import exists
 
 
