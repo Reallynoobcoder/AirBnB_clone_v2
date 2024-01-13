@@ -17,23 +17,33 @@ def do_pack():
     local(f"tar -cvzf {archive_path} web_static")
     return archive_path
 
-def do_deploy(archive_path):
-    """ deploy """
-    if (os.path.isfile(archive_path) is False):
-        return False
 
+def do_deploy(archive_path):
+    """Distribute an archive to web servers."""
     try:
-        new_comp = archive_path.split("/")[-1]
-        new_folder = ("/data/web_static/releases/" + new_comp.split(".")[0])
+        if not path.exists(archive_path):
+            return False
+
         put(archive_path, "/tmp/")
-        run("sudo mkdir -p {}".format(new_folder))
-        run("sudo tar -xzf /tmp/{} -C {}".
-            format(new_comp, new_folder))
-        run("sudo rm /tmp/{}".format(new_comp))
-        run("sudo mv {}/web_static/* {}/".format(new_folder, new_folder))
-        run("sudo rm -rf {}/web_static".format(new_folder))
-        run('sudo rm -rf /data/web_static/current')
-        run("sudo ln -s {} /data/web_static/current".format(new_folder))
+
+        filename = archive_path.split("/")[-1]
+        folder_name = f"/data/web_static/releases/{filename.split('.')[0]}"
+        run("mkdir -p {}".format(folder_name))
+        run("tar -xzf /tmp/{} -C {}".format(filename, folder_name))
+
+        run("rm /tmp/{}".format(filename))
+
+        run("mv {}/web_static/* {}".format(folder_name, folder_name))
+
+        run("rm -rf {}/web_static".format(folder_name))
+
+        run("rm -rf /data/web_static/current")
+
+        run("ln -s {} /data/web_static/current".format(folder_name))
+
+        print("New version deployed!")
         return True
-    except:
+
+    except Exception as err:
+        print(err)
         return False
