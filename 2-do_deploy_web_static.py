@@ -6,8 +6,7 @@ from os import path
 from fabric.api import local, put, run, env
 
 env.hosts = ['35.168.7.64', '34.204.81.91']
-env.user = 'your_ssh_user'
-env.key_filename = '/path/to/your/private/key.pem'  # Replace with your private key file path
+
 
 def do_pack():
     """Create a .tgz archive from the contents of web_static folder."""
@@ -18,17 +17,17 @@ def do_pack():
     local(f"tar -cvzf {archive_path} web_static")
     return archive_path
 
+
 def do_deploy(archive_path):
     """Distribute an archive to web servers."""
-    if not path.exists(archive_path):
-        return False
-
     try:
+        if not path.exists(archive_path):
+            return False
+
         put(archive_path, "/tmp/")
 
         filename = archive_path.split("/")[-1]
         folder_name = f"/data/web_static/releases/{filename.split('.')[0]}"
-
         run("mkdir -p {}".format(folder_name))
         run("tar -xzf /tmp/{} -C {}".format(filename, folder_name))
 
