@@ -4,32 +4,38 @@ Fabric script (based on the file 3-deploy_web_static.py) that deletes
 out-of-date archives using the function do_clean.
 """
 
-from fabric.colors import red
-from fabric.api import local, run, env, cd, lcd
+from fabric.api import local, run, env, cd
+import os
 
-env.hosts = ['34.204.81.91', '35.168.7.64']
+env.hosts = ['35.168.7.64', '34.204.81.91']
 
 
-def do_clean(number=0):
-    """Delete unnecessary archives on web servers."""
+def do_clean(number):
+    """
+    Deletes all unnecessary archives in the versions folder and
+    /data/web_static/releases folder of both web servers.
+    """
     number = int(number)
-    if number < 0:
-        print(red("Number must be non-negative."))
-        return
+    if number < 1:
+        number = 1
 
-    if number == 0:
-        return
+    """"Delete local archives."""
+    local_archives = local("ls -1 versions", capture=True).split("\n")
+    local_archives_to_keep = local_archives[-number:]
+    for archive in local_archives:
+        if archive not in local_archives_to_keep:
+            local("rm -f versions/{}".format(archive))
 
-    with lcd("versions"):
-        local_archives = local("ls -1t", capture=True).splitlines()
-        local_archives_to_keep = local_archives[:number]
-        local_archives_to_remove = local_archives[number:]
-        for archive in local_archives_to_remove:
-            local(f"rm -f {archive}")
-
+    """"Delete remote(server) archives."""
     with cd("/data/web_static/releases"):
-        remote_archives = run("ls -1t").splitlines()
-        remote_archives_to_keep = remote_archives[:number]
-        remote_archives_to_remove = remote_archives[number:]
-        for archive in remote_archives_to_remove:
-            run(f"rm -rf {archive}")
+        remote_archives = run("ls -1").split("\n")
+
+        remote_archives = [
+            archive.strip('\r')
+            for archive in remote_archives
+            if archive.strip()
+            ]
+        remote_archives_to_keep = remote_archives[-number:]
+        for archive in remote_archives:
+            if archive not in remote_archives_to_keep:
+                run("rm -f /data/web_static/releases/{}".format(archive))
