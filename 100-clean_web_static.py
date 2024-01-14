@@ -7,7 +7,7 @@ out-of-date archives using the function do_clean.
 from fabric.colors import red
 from fabric.api import local, run, env, cd, lcd
 
-env.hosts = ['54.236.231.98', '54.197.46.38']
+env.hosts = ['34.204.81.91', '35.168.7.64']
 
 
 def do_clean(number=0):
