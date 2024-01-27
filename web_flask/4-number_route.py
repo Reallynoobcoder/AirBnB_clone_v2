@@ -34,7 +34,7 @@ def python_cool(text="is cool"):
 @app.route("/number/<int:n>", strict_slashes=False)
 def number_n(n):
     """Return n if is an integer"""
-    return f"{n} in a number"
+    return f"{n} is a number"
 
 
 if __name__ == "__main__":
