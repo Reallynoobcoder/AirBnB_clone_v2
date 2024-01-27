@@ -50,7 +50,7 @@ def odd_even(n):
         num = "even"
     else:
         num = "odd"
-    return render_template("5-number.html", number=n, num=num)
+    return render_template("6-number_odd_or_even.html", number=n, num=num)
 
 
 if __name__ == "__main__":
