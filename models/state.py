@@ -19,6 +19,7 @@ class State(BaseModel, Base):
     else:
         name = ""
 
+    @property
     def cities(self):
         """getter docuemnt"""
         from models import storage
