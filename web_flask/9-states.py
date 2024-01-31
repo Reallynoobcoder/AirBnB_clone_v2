@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""""Flask app"""
+"""Flask app"""
 from flask import Flask, render_template
 from models import storage
 from models.state import State
@@ -7,17 +7,17 @@ app = Flask(__name__)
 
 
 @app.route('/states', strict_slashes=False)
-@app.route('states/<state_id>', strict_slashes=False)
-def citties_by_states(state_id=None):
-    """Display the states and cities list ordered by alphabet"""
+@app.route('/states/<state_id>', strict_slashes=False)
+def states(state_id=None):
+    """display the states and cities list ordered by alphabet"""
     states = storage.all(State)
     if state_id:
         state_id = f"State.{state_id}"
-    return render_template("9-states.html", states=states, state_id=state_id)
+    return render_template('9-states.html', states=states, state_id=state_id)
 
 
 @app.teardown_appcontext
-def reload_sql(exeption):
+def tear_down_db(exception):
     """Reload DB"""
     storage.close()
 
