@@ -5,9 +5,11 @@ from models import storage
 from models.state import State
 app = Flask(__name__)
 
+
 @app.route('/states', strict_slashes=False)
-@app.route('/states/<state_id>', strict_slashes=False)
+@app.route('states/<state_id>', strict_slashes=False)
 def citties_by_states(state_id=None):
+    """Display the states and cities list ordered by alphabet"""
     states = storage.all(State)
     if state_id:
         state_id = f"State.{state_id}"
@@ -15,7 +17,7 @@ def citties_by_states(state_id=None):
 
 
 @app.teardown_appcontext
-def reload_sql(exception):
+def reload_sql(exeption):
     """Reload DB"""
     storage.close()
 
